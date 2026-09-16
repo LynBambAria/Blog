@@ -96,6 +96,8 @@ flowchart LR
 
 ## 1.4 创建项目
 
-<img src="https://s41.ax1x.com/2026/09/08/pnVS7iq.md.png" alt="选择空项目"  />
+![选择空项目](https://s41.ax1x.com/2026/09/10/pnZdbJe.png)
 
-<img src="https://s41.ax1x.com/2026/09/08/pnVSHJ0.png" alt="配置新项目" style="zoom: 50%;" />
+
+
+<img src="https://s41.ax1x.com/2026/09/08/pnVSHJ0.png" alt="配置新项目"  />
