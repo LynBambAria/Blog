@@ -90,6 +90,18 @@ git init
 克隆仓库：
 
 ```bash
-git clone https/ssh
+git clone https/ssh "项目地址"
+```
+
+只克隆一个分支：
+
+```bash
+git clone -b --single-branch "branch的名字" "项目地址"
+```
+
+还原至上一次推送：
+
+```bash
+git reset --hard HEAD
 ```
 
