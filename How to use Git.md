@@ -96,7 +96,7 @@ git clone https/ssh "项目地址"
 只克隆一个分支：
 
 ```bash
-git clone -b --single-branch "branch的名字" "项目地址"
+git clone --single-branch -b "branch的名字" "项目地址"
 ```
 
 还原至上一次推送：
