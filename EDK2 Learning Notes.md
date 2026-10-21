@@ -55,6 +55,12 @@ BIOS 用 **16 位实模式 + MBR + 私有中断**这套 1980 年代的老架构
 - **CRB/FSP**：芯片厂在样板房上做的硅专用装修，负责这颗 SoC 的 GPIO、时钟、内存、上电流程。
 - **UEFI 固件**：`EDK2 + CRB` 一起编译出来的成品，`UEFI` 是它的**技术身份/名字**，不是它的某一层。
 
+> <span style="color:#e64340">需要注意的是，UEFI只提供了标准和规范，并未提供实现。</span>
+>
+> <span style="color:#e64340">而具体的实现则为后文内容，且只有后文的EDK2可以实现UEFI，除此之外再无第二个。</span>
+>
+> <span style="color:#e64340">因此，我们后面的重点会放在EDK2。</span>
+
 ## EDK2的安装与环境配置（基于Windows）
 
 ### 一、安装Visual Studio 2019
@@ -223,3 +229,13 @@ F:\UEFI\edk2\Build\OvmfX64\DEBUG_VS2022\FV\OVMF.fd
 | submodule xxx not found      | 没有初始化子模块          | git submodule update --init --recursive |
 | 路径中有中文导致乱码         | EDK2 工具链不支持中文路径 | 把 edk2 放到纯英文路径下                |
 | Build Failed + IA32 相关错误 | target.txt 架构配置不对   | 确认 TARGET_ARCH = X64yy                |
+
+## EDK2的介绍
+
+[代码仓库在这里](https://github.com/tianocore)，[这是官方的手册和教程](https://www.tianocore.org/)。
+
+<img title="" src="assets\f9bf1b1f500192691f214d31ec2429a580ad00c1.png" alt="" data-align="inline" />
+
+克隆下EDK2仓库后，优先使用的是如下两个仓库：EmulatorPkg & OvmfPkg。
+
+![](assets\cdf4f03bbed0d12c83afb8771ef1ad73b3611809.png)
