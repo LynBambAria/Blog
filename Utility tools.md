@@ -79,3 +79,5 @@ docker build -t markitdown:latest .
 - **安全提醒（官方强调）**：它以当前进程权限做 I/O，`convert()` 能读本地文件、远程 URI、字节流。处理**不可信输入**时别直接丢给它，用更窄的接口：`convert_local()`（只读本地）、`convert_stream()`、`convert_response()`。
 - **性能**：图片 OCR、音频转写依赖可选包，装 `[all]` 体积会比较大。
 - **插件**：默认关闭，`markitdown --list-plugins` / `--use-plugins 文件.pdf` 启用。
+
+## Bugzilla：提Bug平台

@@ -230,7 +230,9 @@ F:\UEFI\edk2\Build\OvmfX64\DEBUG_VS2022\FV\OVMF.fd
 | 路径中有中文导致乱码         | EDK2 工具链不支持中文路径 | 把 edk2 放到纯英文路径下                |
 | Build Failed + IA32 相关错误 | target.txt 架构配置不对   | 确认 TARGET_ARCH = X64yy                |
 
-## EDK2的介绍
+## EDK2概述
+
+### EDK2的Github仓库介绍
 
 [代码仓库在这里](https://github.com/tianocore)，[这是官方的手册和教程](https://www.tianocore.org/)。
 
@@ -239,3 +241,53 @@ F:\UEFI\edk2\Build\OvmfX64\DEBUG_VS2022\FV\OVMF.fd
 克隆下EDK2仓库后，优先使用的是如下两个仓库：EmulatorPkg & OvmfPkg。
 
 ![](assets\cdf4f03bbed0d12c83afb8771ef1ad73b3611809.png)
+
+### EDK2的开发流程
+
+如果想加入EDK2的开发组，看大家的讨论，[可以点击这里注册账号并向管理员申请权限](https://edk2.groups.io/g/devel/subgroups)，订阅此group以后有讨论或者更新迭代都会收到邮件
+
+### EDK2的构建全过程
+
+EDK2的三大特点：Packages、Libraries、PCDs，分别解决了代码怎么组织，代码怎么使用，代码怎么配置。
+
+EDK2可在Windows/Mac OS/Linux环境下使用，可用的工具链也非常多。 
+
+#### edksetup.bat执行过程：
+
+在上一章的EDK2的安装与环境配置的第六点中，存在着``edksetup.bat``的指令，让我们来看看里面到底做了什么：
+
+1. 配置寻找EDK2的source路径：**EDK2_TOOLS_PATH**
+
+2. 配置寻找系统PATH，其中包含**Python**、**NASM**、**iasl**等
+
+3. 配置寻找source code的根路径：**WORKSPACE**
+
+4. 配置寻找额外的未放在根路径下的Packages：**PACKAGES_PATH**（如果只做EDK2的开发的话不会涉及到此项）
+
+5. 拷贝``Conf/build_rule.txt``、``Conf/target.txt``、``Conf/tools_def.text``三个文件,这几个是build的配置文件
+
+#### Build过程：
+
+1. 输入INF、DEC、DSC、FDF、Bin、tools_def.text、target.txt文件经过自动生成解析工具阶段对每个模块生成**makefile**、**.c**、**.h**、**.depex**文件
+
+2. 对生成的**makefile**文件**make**（Windows下为nmake，Linux下为make），在此期间将source code编译为**.bin**、**.efi**、**.acpi**、**.com**、**iaml**等文件
+
+3. 将生成的**bin**、**.efi**、**.acpi**、**.com**、**iaml**等文件打包放在一起，形成image文件，生成最后的**.fd**、**.fv**文件
+
+> 生成的.efi文件在edk2\Build\OvmfX64\DEBUG_VS2019\X64中，在对应的包的Pkg文件夹内也有
+
+#### 常见的Build Command：
+
+```bash
+#选择build的targetarch,如IA32、X64、ARM
+build -a
+
+#选择build的platformfile，如OVMF
+build -p
+
+#查看build的help
+build -h
+
+#report，打印出build的log
+build -y rename.log
+```
