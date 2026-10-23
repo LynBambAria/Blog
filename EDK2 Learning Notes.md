@@ -274,6 +274,10 @@ EDK2可在Windows/Mac OS/Linux环境下使用，可用的工具链也非常多�
 
 3. 将生成的**bin**、**.efi**、**.acpi**、**.com**、**iaml**等文件打包放在一起，形成image文件，生成最后的**.fd**、**.fv**文件
 
+**全流程如图所示：**
+
+![](assets\30da5cb57b509a49e37ca7ce40acd8c8c8653273.png)
+
 > 生成的.efi文件在edk2\Build\OvmfX64\DEBUG_VS2019\X64中，在对应的包的Pkg文件夹内也有
 
 #### 常见的Build Command：
