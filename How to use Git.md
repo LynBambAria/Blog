@@ -141,6 +141,18 @@ git restore --staged .
 git status           # 撤回的文件会回到 "Changes not staged for commit"
 git diff --cached    # 查看当前还留在暂存区的内容（撤回后应为空）
 
+# 提交推送日志（有以下两种推送方式）
+git commit（进入vim，insert插入，esc退出，:wq!保存并退出
+git commit -m "Change Message"
+
 # 推送上传代码
 git push
 ```
+
+使用Windows的童鞋要特别注意：千万不要使用Windows自带的记事本编辑任何文本文件。原
+因是Microsoft开发记事本的团队使用了一个非常弱智的行为来保存UTF-8编码的文件，他们自作
+聪明地在每个文件开头添加了0xefbbbf（十六进制）的字符，你会遇到很多不可思议的问题，比
+如，网页第一行可能会显示一个“?”，明明正确的程序一编译就报语法错误，等等，都是由记事本
+的弱智行为带来的。建议你下载Visual Studio Code代替记事本，不但功能强大，而且免费！
+
+git log 命令显示从最近到最远的提交日志，如果嫌输出信息太多，看得眼花缭乱的，可以试试加上--pretty=oneline参数。

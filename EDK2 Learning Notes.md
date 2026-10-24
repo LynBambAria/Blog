@@ -295,3 +295,91 @@ build -h
 #report，打印出build的log
 build -y rename.log
 ```
+
+## 系统固件和OS的联系
+
+### 支持UEFI的OS
+
+- **Windows**，目前只支持UEFI的boot
+
+- **Linux**
+
+![](assets\28972e2e3ef40c03e8662d1639bc967f4397a5dc.png)
+
+**BDS**阶段结束后，会把OS Loader（UEFI的一个分区）加载起来，由OS Loader去把**OS Kernel**加载起来。OS Loader不由BIOS厂商提供，而是由OS提供，例如Microsoft。OS Loader相当于一个UEFI的application，调用UEFI的**API**收集到系统的基本信息发送给OS，后续由OS统一管理和使用。OS收集完需要的信息后，会触发**ExitBootServices（）**告诉BIOS可以退出并接管过来OS。至此以后BIOS只提供**Run Time Services**、**SMI handler**等服务，如果OS需要会向BIOS**发送指令**来调用这些服务。
+
+### OS对UEFI的需求
+
+1. 在BDS（Boot Device Select）阶段，能找到启动设备，如硬盘、U盘等，在这些启动设备中需要存在符合UEFI规范的**分区**，在内部有可以启动的**efi**文件。在此阶段的输入输出设备要初始化好并连接，便于用户交互。
+
+2. 在一个全新的设备上第一次用**UEFI OS Installer**安装时，需要**UEFI OS Installer**可以分配符合UEFI规范的分区空间，这些空间要被格式化为**FAT32**的文件系统，在此之后要把**OS Loader**按照目录结构依次分配。
+
+3. 在2的同时还要创建一个**Boot Device veriable**，内部存储了一个完整的**Device path**，下一次启动对于BDS来说就知道有这样的一个Boot 选项存在。
+
+### OS对UEFI Drivers的需求
+
+1. Boot Device
+
+2. Console Input
+
+3. Console Output
+
+4. NVRAM Driver
+
+### OS和UEFI Service
+
+Runtime Services并非只在Runtime阶段能用，而是说明这些Services在Runtime的OS下还可以继续使用。
+
+![](assets\d050325eb8460eace0ec0b9c7be70a9679fe4f68.png)
+
+- UEFI Runtime Services Table：是 UEFI **System Table** 里的一个函数指针表，包含图片里面那个框里的所有service
+
+- **Variable Services**：OS和BIOS交流的服务
+
+- **Real Time Clock Services**：RTC服务，很少使用
+
+- **Reset Services**：OS有自己的reset方式，一般很少用这种方式
+
+- **Status Code Services**：把Boot的某些阶段的状态打印出来
+
+- **Virtual Memory Services**：BIOS下memory都是**物理空间**，OS下的memory都是**虚拟内存空间**，需要做一个匹配和更改，此服务在Boot to OS之前就做了
+
+图中剩下的其他内容基本都是information（信息）用于和OS交换，而非services。
+
+### OS和UEFI的Boot Security
+
+以下内容拿Intel平台举例：
+
+1. 硬件层面的安全性：**Boot Guard**，**Intel®TXT**
+
+2. 可衡量安全性的启动：**TPM**（可信平台模块，这是一个硬件，并非Intel提供，而是一个工业标准，可以生成哈希值）
+
+3. 检测Boot：验证**Boot Guard**和**UEFI Secure Boot**是否正常
+
+#### 硬件信任
+
+**Boot Guard：**
+
+CPU上电的第一条指令之前就已经做完了验证签名，公钥的哈希值已经被写进CPU
+
+**Intel®TXT：**
+
+将CPU启动过程全部记录下来，生成一个哈希值存储下来，在下一次启动时比较哈希值
+
+#### UEFI Secure Boot
+
+![](assets\2cf5c21e546bbd3b2230feff5b847c5086d19274.png)
+
+1. 刷在**Flash**上的BIOS验证通过，在启动过程中可能会有新增的设备，如**显卡**、**网卡**等。卡的**option rom**需要被加载，否则无法正常工作。
+
+2. 卡的option rom必须是**签过名**的，而且公钥一定要是在BIOS的**Key**的空间内部的，这个时候才能验证，才知道有没有被修改过。
+
+3. 验证通过后才可以加载，首先加载**第三方的driver**，然后加载**OS Lodaer**（也要有签名和验证）
+
+4. OS Loader验证**OS Kernel**，而非由BIOS System完成。
+
+#### Authenticated Variables
+
+![](assets\19bcd848280df417f9ffd87a42b89c4960c9ab87.png)
+
+- PK：Public Key
