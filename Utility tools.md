@@ -81,3 +81,7 @@ docker build -t markitdown:latest .
 - **插件**：默认关闭，`markitdown --list-plugins` / `--use-plugins 文件.pdf` 启用。
 
 ## Bugzilla：提Bug平台
+
+## ASCII码转换器 - ASCII码对照表 - 在线字符与ASCII码互转
+
+易工具网：https://easy-utils.com/ascii-converter.html
