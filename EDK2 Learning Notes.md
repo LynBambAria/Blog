@@ -252,7 +252,7 @@ EDK2的三大特点：Packages、Libraries、PCDs，分别解决了代码怎么�
 
 EDK2可在Windows/Mac OS/Linux环境下使用，可用的工具链也非常多。 
 
-#### edksetup.bat执行过程：
+#### edksetup.bat执行过程
 
 在上一章的EDK2的安装与环境配置的第六点中，存在着``edksetup.bat``的指令，让我们来看看里面到底做了什么：
 
@@ -266,7 +266,7 @@ EDK2可在Windows/Mac OS/Linux环境下使用，可用的工具链也非常多�
 
 5. 拷贝``Conf/build_rule.txt``、``Conf/target.txt``、``Conf/tools_def.text``三个文件,这几个是build的配置文件
 
-#### Build过程：
+#### Build过程
 
 1. 输入INF、DEC、DSC、FDF、Bin、tools_def.text、target.txt文件经过自动生成解析工具阶段对每个模块生成**makefile**、**.c**、**.h**、**.depex**文件
 
@@ -274,13 +274,13 @@ EDK2可在Windows/Mac OS/Linux环境下使用，可用的工具链也非常多�
 
 3. 将生成的**bin**、**.efi**、**.acpi**、**.com**、**iaml**等文件打包放在一起，形成image文件，生成最后的**.fd**、**.fv**文件
 
-**全流程如图所示：**
+**全流程如图所示**
 
 ![](assets\30da5cb57b509a49e37ca7ce40acd8c8c8653273.png)
 
 > 生成的.efi文件在edk2\Build\OvmfX64\DEBUG_VS2019\X64中，在对应的包的Pkg文件夹内也有
 
-#### 常见的Build Command：
+#### 常见的Build Command
 
 ```bash
 #选择build的targetarch,如IA32、X64、ARM
@@ -382,4 +382,21 @@ CPU上电的第一条指令之前就已经做完了验证签名，公钥的哈�
 
 ![](assets\19bcd848280df417f9ffd87a42b89c4960c9ab87.png)
 
-- PK：Public Key
+- **PK**：Public Key，用于对第三方的code、driver、application做校验
+- **KEK**：一个认证变量，内容是一组证书；它的唯一作用是：签发对 `db`、`dbx` 的更新请求时，由固件用它来验签。
+- **DB**：白名单，一些driver即使不通过校验也可以加载
+- **DBX**：黑名单，driver即使通过校验也不允许被加载
+
+这四个文件可读，但是若需写需要非常高的权限，通常情况下在出厂的时候就已经写死。
+
+## CoreBoot
+
+**UEFI**是启动BIOS的一种**解决方案**，CoreBoot是另外一种解决方案，除此之外还有Uboot、LinuxBoot等。
+
+![](assets\822ca2efb2c4774ab0ed74e57ab87b525d612c7a.png)
+
+**Corboot**本身是一个**轻量级**的解决方案，**只做硬件的初始化**，不提供硬盘设备，也**不提供OS需要的Service**。CoreBoot硬件初始化后只能启动到自己的环境下，不能启动到OS。因此在CoreBoot和OS层中间会加入一层**Payload**，用于提供对应OS的Service。
+
+## 固件存储与变量
+
+### Firware Storage
