@@ -399,4 +399,18 @@ CPU上电的第一条指令之前就已经做完了验证签名，公钥的哈�
 
 ## 固件存储与变量
 
-### Firware Storage
+### Firware Storage（.fv）
+
+在fv的内部中既存储了数据也存储了代码，fv由FFS组成
+
+#### Firware File System（FFS）
+
+FFS描述说明FFS是说明类型、包含了什么样的数据，每个FFS都有自己的GUID和type
+
+#### Firmware Files
+
+又称为section，内部存有数据或代码或其他的信息
+
+![](assets\2a8bef23c58981f4d8530897acbb6dab827481d0.png)
+
+三层结构如图所示，flash devices简称为fd，fd由一组多个fv组成，有些fv是标准格式的fv，称为firmware fv，内部包含了file和section；有些是variable fv,存储的是variable的数据。
