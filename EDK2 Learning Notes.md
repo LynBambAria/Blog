@@ -399,18 +399,46 @@ CPU上电的第一条指令之前就已经做完了验证签名，公钥的哈�
 
 ## 固件存储与变量
 
-### Firware Storage（.fv）
+**Firware Storage（.fv）**
 
 在fv的内部中既存储了数据也存储了代码，fv由FFS组成
 
-#### Firware File System（FFS）
+**Firware File System（FFS）**
 
 FFS描述说明FFS是说明类型、包含了什么样的数据，每个FFS都有自己的GUID和type
 
-#### Firmware Files
+**Firmware Files**
 
-又称为section，内部存有数据或代码或其他的信息
+又称为**section**，内部存有**数据**或**代码**或其他的**信息**
 
 ![](assets\2a8bef23c58981f4d8530897acbb6dab827481d0.png)
 
-三层结构如图所示，flash devices简称为fd，fd由一组多个fv组成，有些fv是标准格式的fv，称为firmware fv，内部包含了file和section；有些是variable fv,存储的是variable的数据。
+三层结构如图所示，**flash devices**简称为**fd**，**fd**由一组多个**fv**组成，有些fv是**标准格式**的fv，称为**firmware fv**，内部包含了**file**和**section**；有些是**variable fv**,存储的是variable的**数据**。
+
+fv和fv之间不能嵌套，file和file之间不能嵌套，只有**section**和**section**之间可以嵌套
+
+![](assets\50b312f9b278860f5f226b68f020ba481ea3f219.png)
+
+- FFS File和Section的Type如上图所示，不同的**type**有不同的含义。
+
+- 数据一般存在**RAW**和**FREEFORM**内，**FREEFORM**存储数据一般用**section**的方式存储，**RAW**存的话内部就不会有section而是**直接存储数据**。
+
+- **FREEFORM**用的最多的是**ACPI table**，内部可能有**好几个table**，用**一个个section**存储在FREEFORM内。
+
+- RAW下通常存储**code**，**code**会生成一个**.bin**
+
+- Section的PE32、DXE_DEPEX、PEI_DEPEX、SMM_DEPEX、USER_INTERFACE(UI)通常存储在**EFI_FV_FILETYPE_DRIVER**内
+
+- EFI_SECTION_RAW通常存储在**EFI_FV_FILETYE_FREEFORM**内
+
+通常使用较多的是调用**EFI_FV_FILETYPE_PEIM**和**EFI_FV_FILETYPE_DRIVER**，这俩个会继续调用PE32、DXE_DEPEX、PEI_DEPEX、SMM_DEPEX、USER_INTERFACE(UI)的section，PE32内存储的就是**efi image**。
+
+### 访问fv的方式
+
+**PEI阶段：**
+
+通过**FvInfoPpi**访问fv，这个FvInfoPpi是由**Platform**报的，或者**安装**一个Ppi，告知有一个fv，fv的**base地址**是什么，**size**是什么。
+
+**PEI core**内有一个**FvPpi**的**service**，提供对**PEI**定义的标准的fv进行pass，就能发现每一个**FFS**以及**FFS包含的section的数据**。
+
+**FvHob**是**PEI**和**DXE**之间**传输数据**的一种**方式**，如果一个fv是PEI阶段发现的但是在PEI阶段不用，通常会在Platform PEI阶段报一个FvHob，将Fv的信息描述出来，*FvHob*就会在**DXE**阶段进行**解析**和**分发**。
