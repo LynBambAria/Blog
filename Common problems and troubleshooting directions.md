@@ -14,6 +14,8 @@
 
 1. 最先检查的为是否是图片的路径问题，其次是token是否置1打开了
 
-2. 如果表现形式为AMI的Logo或黑屏则为根本没有刷入进去，排查方向为检查最外层的changelogo函数是否为最新的，如果是Gif再排查Override内logo.c和dogifmgr.c函数是否为最新的
+2. 如果表现形式为AMI的Logo或黑屏则为根本没有刷入进去，排查方向为检查最外层的changelogo函数是否为最新的，如果是Gif再排查Override内logo.c和dogifmgr.c函数是否为最新的，以及veb文件内是否包含了gif的内容
 
-3. 如果表现形式为Windows图标，下方有转圈但是没有Logo，排查方向重心偏向为图是否有问题
+3. 如果表现形式为Logo异常闪烁，排查方式如2
+
+4. 如果表现形式为Windows图标，下方有转圈但是没有Logo，排查方向重心偏向为图是否有问题
