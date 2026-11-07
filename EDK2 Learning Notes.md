@@ -435,10 +435,18 @@ fv和fv之间不能嵌套，file和file之间不能嵌套，只有**section**和
 
 ### 访问fv的方式
 
-**PEI阶段：**
+#### **PEI阶段**
 
 通过**FvInfoPpi**访问fv，这个FvInfoPpi是由**Platform**报的，或者**安装**一个Ppi，告知有一个fv，fv的**base地址**是什么，**size**是什么。
 
 **PEI core**内有一个**FvPpi**的**service**，提供对**PEI**定义的标准的fv进行pass，就能发现每一个**FFS**以及**FFS包含的section的数据**。
 
-**FvHob**是**PEI**和**DXE**之间**传输数据**的一种**方式**，如果一个fv是PEI阶段发现的但是在PEI阶段不用，通常会在Platform PEI阶段报一个FvHob，将Fv的信息描述出来，*FvHob*就会在**DXE**阶段进行**解析**和**分发**。
+**FvHob**是**PEI**和**DXE**之间**传输数据**的一种**方式**，如果一个fv是PEI阶段发现的但是在PEI阶段不用，通常会在Platform PEI阶段报一个FvHob，将Fv的信息描述出来，FvHob就会在**DXE**阶段进行**解析**和**分发**。
+
+#### **DXE阶段**
+
+DXE阶段拿到FvHob后，会先生成**FVB protocol**（Firmware Volume Block Driver），在FVB protocol之上会再生成**FV protocol**。这个FV protocol很像PEI阶段的FvPpi，FV protocol会对FV进行管理。可以对FV内部的信息进行读操作，读某一个section/file。
+
+FVB可读可写，如果FVB内部的数据格式是符合PI Spec规定FV的格式的，会在FVB之上创建FV protocol，否则不会创建。只有FVB可以操作variable，**FVB相当于用Block的方式直接对Flash进行读、写、擦除**。
+
+FVB只是针对Flash空间提供了一个low level(block level)的读、写，需要读什么bit就读什么bit，对于这些bit的数据结构、数据类型、layout格式是不清楚的，只是对**原始数据**的读写，也就是RAW data，实际上在FV阶段RAW data已经有文件系统和分层架构的存在了。
