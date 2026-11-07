@@ -112,6 +112,11 @@ git reset --hard HEAD
 git log
 
 git reset --hard "版本编号"
+
+# 如果还原到了过去的版本，使用git log无法看到此版本以后的新版本
+# 但是想回到相较于过去版本的新版本
+git reflog
+git reset --hard "版本编号"
 ```
 
 推送代码：
@@ -147,6 +152,19 @@ git commit -m "Change Message"
 
 # 推送上传代码
 git push
+```
+
+撤销修改：
+
+```bash
+#文件已经修改但还未添加到缓冲区
+git checkout --file_name
+
+#文件已经添加到缓冲区但是未上传
+git reset HEAD file_name
+git checkout --file_name
+
+#若文件已经上传则无法撤回
 ```
 
 使用Windows的童鞋要特别注意：千万不要使用Windows自带的记事本编辑任何文本文件。原
